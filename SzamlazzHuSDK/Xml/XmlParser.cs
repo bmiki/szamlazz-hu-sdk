@@ -212,7 +212,7 @@ namespace SzamlazzHu
         }
         private static string GetString(XmlNode doc, string tagName)
         {
-            return doc[tagName]?.FirstChild.Value;
+            return doc[tagName]?.FirstChild?.Value ?? String.Empty;
         }
 
     }

@@ -94,6 +94,26 @@
         <elszdatig/>
       </fokonyv>
     </tetel>
+    <tetel>
+      <nev>Elado izé 2</nev>
+      <mennyiseg>2</mennyiseg>
+      <mennyisegiegyseg>db</mennyisegiegyseg>
+      <nettoegysegar>10000</nettoegysegar>
+      <afakulcs>27</afakulcs>
+      <netto>20000</netto>
+      <arresafaalap>0</arresafaalap>
+      <afa>5400</afa>
+      <brutto>25400</brutto>
+      <megjegyzes></megjegyzes>
+      <fokonyv>
+        <arbevetel/>
+        <afa/>
+        <gazdasagiesemeny/>
+        <gazdasagiesemenyafa/>
+        <elszdattol/>
+        <elszdatig/>
+      </fokonyv>
+    </tetel>
   </tetelek>
   <osszegek>
     <afakulcsossz>
