@@ -123,6 +123,18 @@ namespace SzamlazzHuTest
             Assert.IsTrue(deleteInvoiceResponse.Success, deleteInvoiceResponse.ErrorMessage);
         }
 
+        [TestMethod]
+        public async Task GetInvoiceRequestLoginError()
+        {
+            var api = new SzamlazzHuApi();
+            var getInvoiceRequest = new GetInvoiceRequest();
+            getInvoiceRequest.AuthenticationData.ApiKey = "dummy_api_key";
+            getInvoiceRequest.InvoiceNumber = "Teszt";
+            var getInvoiceResponse = await api.GetInvoice(getInvoiceRequest);
+            Assert.AreEqual(false, getInvoiceResponse.Success);
+            Assert.AreEqual(3, getInvoiceResponse.ErrorCode);
+        }
+
         private CreateInvoiceRequest CreateSampleRequest()
         {
             var request = new CreateInvoiceRequest();

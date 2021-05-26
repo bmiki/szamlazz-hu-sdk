@@ -31,26 +31,58 @@ namespace SzamlazzHu
         public static GetInvoiceResponse ParseGetInvoiceResponse(XmlDocument doc)
         {
             var root = doc.DocumentElement;
+
+            //Error handling
+            if(root?["sikeres"] != null)
+            {
+                return new GetInvoiceResponse()
+                {
+                    Success = GetBool(root, "sikeres"),
+                    ErrorCode = GetInt(root, "hibakod"),
+                    ErrorMessage = GetString(root, "hibauzenet")
+                };
+            }
+
+            //Parse message in case of sucess
             string pdfString = GetString(root, "pdf");
             var response = new GetInvoiceResponse
             {
                 InvoicePdf = pdfString != null ? Convert.FromBase64String(pdfString) : null
-            };            
+            };
 
-            foreach (var item in root["tetelek"].ChildNodes)
+            var items = root?["tetelek"]?.ChildNodes;
+            if (items != null)
             {
-                response.InvoiceItems.Add(ParseInvoiceItem((XmlNode)item));
+                foreach (var item in items)
+                {
+                    response.InvoiceItems.Add(ParseInvoiceItem((XmlNode)item));
+                }
             }
 
-            foreach (var payment in root["kifizetesek"].ChildNodes)
+            var payments = root?["kifizetesek"]?.ChildNodes;
+            if( payments != null)
             {
-                response.PaymentItems.Add(ParsePaymentItem((XmlNode)payment));
+                foreach (var payment in payments)
+                {
+                    response.PaymentItems.Add(ParsePaymentItem((XmlNode)payment));
+                }
             }
 
-            response.InvoiceHeader = ParseInvoiceHeader(root["alap"]);
-            response.Customer = ParseCustomer(root["vevo"]);
-            response.Seller = ParseSeller(root["szallito"]);
-            response.Summaries = ParseSummaries(root["osszegek"]);
+            var header = root?["alap"];
+            if(header != null)
+                response.InvoiceHeader = ParseInvoiceHeader(header);
+            
+            var customer = root?["vevo"];
+            if(customer != null)
+                response.Customer = ParseCustomer(customer);
+
+            var seller = root?["szallito"];
+            if(seller != null)
+                response.Seller = ParseSeller(seller);
+
+            var summaries = root?["osszegek"];
+            if(summaries != null)
+                response.Summaries = ParseSummaries(summaries);
             return response;
         }
 
@@ -114,6 +146,9 @@ namespace SzamlazzHu
 
         private static Summaries ParseSummaries(XmlElement element)
         {
+            if (element == null)
+                return null;
+
             XmlNode vatRateSums = element["afakulcsossz"];
             XmlNode totalSums = element["totalossz"];
             return new Summaries
@@ -212,7 +247,7 @@ namespace SzamlazzHu
         }
         private static string GetString(XmlNode doc, string tagName)
         {
-            return doc[tagName]?.FirstChild?.Value ?? String.Empty;
+            return doc?[tagName]?.FirstChild?.Value ?? String.Empty;
         }
 
     }
